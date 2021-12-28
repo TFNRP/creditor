@@ -13,8 +13,9 @@ class Field {
   }
 
   verifyType(...expected) {
-    if (!expected.includes(typeof this.value)) {
-      console.error(`Expected ${expected.join(', ')} for field ${this.name}, got "${typeof this.value}".`);
+    const type = typeof (this.value ?? undefined);
+    if (!expected.includes(type)) {
+      console.error(`Expected ${expected.join(', ')} for field ${this.name}, got "${type}".`);
       this.value = null;
     }
     return this;
