@@ -11,12 +11,10 @@
     "creditor": "./src/index.js"
   },
   "scripts": {
-    "test": "npm run lint && npm run lint:typings && npm i -g && bash ./test/test.sh",
-    "test:typescript": "tsc",
+    "test": "npm run lint && npm i -g && bash ./test/test.sh",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "lint:typings": "tslint typings/index.d.ts",
-    "prettier": "prettier --write src/**/*.js typings/**/*.ts",
+    "prettier": "prettier --write src/**/*.js",
     "prepublishOnly": "npm run test"
   },
   "repository": {
@@ -44,14 +42,11 @@
     "@types/node-fetch": "^2.5.12",
     "@vue/cli": "^4.5.15",
     "@vue/cli-service-global": "^4.5.15",
-    "dtslint": "^4.2.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.4.1",
-    "tslint": "^6.1.3",
-    "typescript": "^4.4.3"
+    "prettier": "^2.4.1"
   },
   "engines": {
     "node": ">=14.0.0",
