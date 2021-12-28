@@ -52,7 +52,7 @@ const recurse = async path => {
 
   const result = np.extname(path) === '.lua' ? Util.parseManifest(src) : yaml.parse(src);
   const data = new Data(path);
-  data.createField('name', result.name).verifyType('string', 'undefined');
+  data.createField('name', result.name ?? np.basename(np.join(path, '..'))).verifyType('string', 'undefined');
   data.createField('contact', result.contact).verifyType('string', 'undefined');
   data
     .createField('author', result.author ?? config.defaultAuthor)
