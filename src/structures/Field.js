@@ -44,9 +44,9 @@ class Field {
   }
 
   async fetchRepositoryData() {
-    this.value = { url: this.value };
-    const url = new URL(this.value.url);
     if (this.value) {
+      this.value = { url: this.value };
+      const url = new URL(this.value.url);
       switch (url.hostname.replace(/^www\./i, '')) {
         case 'github.com': {
           const res = await fetch(`https://api.github.com/repos${url.pathname}`, {
