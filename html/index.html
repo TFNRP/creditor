@@ -1,0 +1,60 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Credits</title>
+  <script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue-axios@2.1.4/dist/vue-axios.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <div class="container" id="app">
+    <div class="panel panel-default" v-for="credit in credits" :id="credit.name">
+      <div class="panel-heading">
+        <h2 :title="credit.name">
+          <a target="_blank" v-if="credit.repository?.url || credit['gta5-mods']"
+            :href="credit.repository?.url || credit['gta5-mods']">{{ credit.name }}</a>
+          <span v-else>{{ credit.name }}</span>
+          <span class="badge" v-if="credit.version">{{ credit.version }}</span>
+          <small v-if="credit.author">
+            by {{ credit.author }}
+            <a target="_blank" v-if="credit.contact" :href="'mailto:' + credit.contact">&#60;{{ credit.contact
+              }}&#62;</a>
+          </small>
+        </h2>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item" v-if="credit.description"><b>Description:</b> {{ credit.description }}</li>
+        <li class="list-group-item" v-if="credit.repository?.license">
+          <b>License:</b>
+          <a target="_blank" :href="credit.repository.url + '/blob/main/LICENSE'">
+            {{ credit.repository.license }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</body>
+
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      keyword: '',
+      credits: []
+    },
+    computed: {},
+    mounted() {
+      axios.get('./credits.json')
+        .then((response) => {
+          this.credits = response.data;
+        })
+    }
+  });
+</script>

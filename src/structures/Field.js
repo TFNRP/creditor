@@ -1,0 +1,81 @@
+'use strict';
+
+const np = require('node:path');
+const { URL } = require('node:url');
+const fetch = require('node-fetch');
+
+/** Helper class for field data */
+class Field {
+  constructor(data, name, value) {
+    this.data = data;
+    this.name = name;
+    this.value = value;
+  }
+
+  verifyType(...expected) {
+    if (!expected.includes(typeof this.value)) {
+      console.error(`Expected ${expected.join(', ')} for field ${this.name}, got "${typeof this.value}".`);
+      this.value = null;
+    }
+    return this;
+  }
+
+  verifyUrl(...hostname) {
+    if (typeof this.value === 'string') {
+      let url;
+      try {
+        url = new URL(/^https?:\/\//i.test(this.value) ? this.value : `https://${this.value}`);
+        if (!hostname.includes(url.hostname.replace(/^www\./i, ''))) {
+          console.warn(`Manifest contains incorrect ${this.name} url "${np.relative(process.cwd(), this.data.path)}"`);
+        }
+        this.value = `https://${hostname[0]}${url.pathname}`;
+      } catch (e) {
+        if (e.code === 'ERR_INVALID_URL') {
+          console.error(
+            `Manifest contains invalid url in field ${this.name} "${np.relative(process.cwd(), this.data.path)}"`,
+          );
+        } else {
+          console.error(e);
+          process.exit(1);
+        }
+      }
+    }
+    return this;
+  }
+
+  async fetchRepositoryData() {
+    this.value = { url: this.value };
+    const url = new URL(this.value.url);
+    if (this.value) {
+      switch (url.hostname.replace(/^www\./i, '')) {
+        case 'github.com': {
+          const res = await fetch(`https://api.github.com/repos${url.pathname}`, {
+            method: 'get',
+          });
+          if (res.status === 200) {
+            const data = await res.json();
+            if (data.license) this.value.license = data.license.name;
+            if (data.owner) this.owner = data.owner.login;
+            if (!this.data.fields.name.value) this.data.fields.name.value = data.name;
+          }
+          break;
+        }
+      }
+    }
+    return this;
+  }
+
+  parseEmail() {
+    if (typeof this.value === 'string' && !this.data.fields.contact.value) {
+      const matched = this.value.match(/<\w+@\w+\.\w+>/i);
+      if (matched) {
+        if (matched.index === 0) this.value = this.value.slice(matched[0].length).trim();
+        else this.value = this.value.slice(0, matched.index).trim();
+        this.data.fields.contact.value = matched[0].slice(1, -1);
+      }
+    }
+    return this;
+  }
+}
+
+module.exports = Field;
