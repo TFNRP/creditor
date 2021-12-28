@@ -60,7 +60,10 @@ const recurse = async path => {
     .parseEmail();
   data.createField('version', result.version).verifyType('string', 'number', 'undefined');
   data.createField('description', result.description).verifyType('string', 'undefined');
-  data.createField('gta5-mods', result['gta5-mods']).verifyType('string', 'undefined').verifyUrl('gta5-mods.com');
+  data
+    .createField('gta5mods', result['gta5-mods'] ?? result.gta5mods)
+    .verifyType('string', 'undefined')
+    .verifyUrl('gta5-mods.com');
   await data
     .createField('repository', result.repository)
     .verifyType('string', 'undefined')
