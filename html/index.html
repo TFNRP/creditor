@@ -20,7 +20,7 @@
           <a target="_blank" v-if="credit.repository?.url || credit.gta5mods"
             :href="credit.repository?.url || credit.gta5mods">{{ credit.name }}</a>
           <span v-else>{{ credit.name }}</span>
-          <span class="badge" v-if="credit.version">{{ credit.version }}</span>
+          <span class="badge" v-if="credit.version">{{ typeof credit.version === 'number' ? credit.version.toLocaleString(undefined, { minimumFractionDigits: 1 }) : credit.version }}</span>
           <small v-if="credit.author">
             by {{ credit.author }}
             <a target="_blank" v-if="credit.contact" :href="'mailto:' + credit.contact">&#60;{{ credit.contact
