@@ -26,7 +26,7 @@ class Field {
       let url;
       try {
         url = new URL(/^https?:\/\//i.test(this.value) ? this.value : `https://${this.value}`);
-        if (!hostname.includes(url.hostname.replace(/^www\./i, ''))) {
+        if (hostname.length > 0 && !hostname.includes(url.hostname.replace(/^www\./i, ''))) {
           console.warn(`Manifest contains incorrect ${this.name} url "${np.relative(process.cwd(), this.data.path)}"`);
         }
         this.value = `https://${url.hostname}${url.pathname}`;

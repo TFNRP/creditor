@@ -17,8 +17,8 @@
     <div class="panel panel-default" v-for="credit in credits" :id="credit.name">
       <div class="panel-heading">
         <h2 :title="credit.name">
-          <a target="_blank" v-if="credit.repository?.url || credit.gta5mods"
-            :href="credit.repository?.url || credit.gta5mods">{{ credit.name }}</a>
+          <a target="_blank" v-if="credit.repository?.url || credit.gta5mods || credit.download"
+            :href="credit.repository?.url || credit.gta5mods || credit.download">{{ credit.name }}</a>
           <span v-else>{{ credit.name }}</span>
           <span class="badge" v-if="credit.version">{{ typeof credit.version === 'number' ? credit.version.toLocaleString(undefined, { minimumFractionDigits: 1 }) : credit.version }}</span>
           <small v-if="credit.author">

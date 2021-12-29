@@ -69,6 +69,7 @@ Entry | Description | Optional | Default | Example
 `description` | The description of this resource/credit.                                                                   | ![yes][200] | `nil`           | `'This resource populates dynamic vehicles in ped traffic.'`
 `gta5mods`    | The resource's [gta5-mods](https://gta5-mods.com) post.                                                    | ![yes][200] | `nil`           | `'https://www.gta5-mods.com/vehicles/brute-mr-tasty-gta-iv-style-add-on-liveries-template-sound-custom-shards'`
 `repository`  | The resource's GitHub or GitLab repository.                                                                | ![yes][200] | `nil`           | `'https://github.com/TFNRP/axonbody3'`
+`download`    | Miscellaneous download URL if no `repository` or `gta5mods` is available.                                  | ![yes][200] | `nil`           | `'https://forum.cfx.re/t/release-modern-seatbelt/4779995'`
 
 ## Command-Line Arguments
 
