@@ -29,7 +29,7 @@ class Field {
         if (!hostname.includes(url.hostname.replace(/^www\./i, ''))) {
           console.warn(`Manifest contains incorrect ${this.name} url "${np.relative(process.cwd(), this.data.path)}"`);
         }
-        this.value = `https://${hostname[0]}${url.pathname}`;
+        this.value = `https://${url.hostname}${url.pathname}`;
       } catch (e) {
         if (e.code === 'ERR_INVALID_URL') {
           console.error(
