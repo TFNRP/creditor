@@ -14,7 +14,7 @@
 
 <body>
   <div class="container" id="app">
-    <div class="panel panel-default" v-for="credit in credits" :id="credit.name">
+    <div class="panel panel-default" v-for="credit in credits" :id="credit.id">
       <div class="panel-heading">
         <h2 :title="credit.name">
           <a target="_blank" v-if="credit.repository?.url || credit.gta5mods || credit.download"
@@ -52,6 +52,17 @@
     mounted() {
       axios.get('./credits.json')
         .then((response) => {
+          // uniquify ids
+          var ids = {};
+          for (var i = 0; i < response.data.length; i++) {
+            var id = response.data[i].id.toString();
+            var iter = 1;
+            while (ids[id]) {
+              iter++;
+              id = `${response.data[i].id}-${iter}`;
+            }
+            ids[response.data[i].id = id] = true;
+          }
           this.credits = response.data;
         })
     }

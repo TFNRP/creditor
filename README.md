@@ -62,7 +62,8 @@ repository: https://github.com/glitchdetector/fx-credits
 
 Entry | Description | Optional | Default | Example
 -- | -- | -- | :--: | --
-`name`        | The name of this resource/credit.                                                                          | ![yes][200] | Resource's name | `'my-resource'`
+`id`          | This resource's name / id of this credit.                                                                  | ![yes][200] | Resource's name | `'mrpd'`
+`name`        | The name to display this credit as.                                                                        | ![yes][200] | id              | `'Mission Row PD'`
 `contact`     | An email address to contact the author. This field will be autofilled if an email is supplied in `author`. | ![yes][200] | `nil`           | `'hagendetector@gmail.com'`
 `author`      | The author's name. May also contain an email address encased in fat brackets.                              | ![no][400]  | `nil`           | `'Hagen Hyena <hagendetector@gmail.com>'`
 `version`     | The version of this software, if any.                                                                      | ![yes][200] | `nil`           | `'1.0.0'`
