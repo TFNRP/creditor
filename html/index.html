@@ -30,6 +30,7 @@
       </div>
       <ul class="list-group">
         <li class="list-group-item" v-if="credit.description"><b>Description:</b> {{ credit.description }}</li>
+        <li class="list-group-item" v-if="credit.usage"><b>Usage:</b> {{ credit.usage }}</li>
         <li class="list-group-item" v-if="credit.repository?.license">
           <b>License:</b>
           <a target="_blank" :href="credit.repository.url + '/blob/main/LICENSE'">
