@@ -102,6 +102,11 @@ class Util extends null {
     return Constants.DefaultConfig;
   }
 
+  static isManifest(filename) {
+    if (/^(fx)?manifest(.+)?\.((lua)|(ya?ml))$/i.test(filename) || filename === '__resource.lua') return true;
+    return false;
+  }
+
   // Polyfill for Array.prototype.at
   static arrayAt(array, n) {
     n = Math.trunc(n) || 0;

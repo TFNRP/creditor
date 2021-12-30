@@ -41,9 +41,7 @@ const recurse = async path => {
     for (const name of fs.readdirSync(path)) await recurse(np.join(path, name));
     return;
   }
-  if (!ent.isFile() || !['manifest.yaml', 'manifest.yml', 'fxmanifest.lua', '__resource.lua'].includes(basename)) {
-    return;
-  }
+  if (!ent.isFile() || !Util.isManifest(basename)) return;
   const src = fs.readFileSync(path, { encoding: 'utf-8', flag: 'r' });
   if (src === '') {
     console.info(`Empty manifest file found at "${path}"`);
