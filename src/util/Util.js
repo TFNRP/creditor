@@ -123,11 +123,11 @@ class Util extends null {
   static getConfig() {
     var filepath;
     if (['.creditor.yaml', '.creditor.yml'].some(p => fs.existsSync((filepath = path.join(process.cwd(), p))))) {
-      const data = Util.parseYaml(filepath);
-      if (data) return data;
+      const data = Util.parseYaml(filepath, fs.readFileSync(filepath, { encoding: 'utf-8', flag: 'r' }));
+      if (data) return Util.mergeDefault(Constants.DefaultConfig, data);
     }
     if (['.creditor.json', '.creditor.js'].some(p => fs.existsSync((filepath = path.join(process.cwd(), p))))) {
-      return require(filepath);
+      return Util.mergeDefault(Constants.DefaultConfig, require(filepath));
     }
     return Constants.DefaultConfig;
   }
@@ -135,6 +135,19 @@ class Util extends null {
   static isManifest(filename) {
     if (/^(fx)?manifest(.+)?\.((lua)|(ya?ml))$/i.test(filename) || filename === '__resource.lua') return true;
     return false;
+  }
+
+  static mergeDefault(def, given) {
+    if (!given) return def;
+    for (const key in def) {
+      if (!Object.prototype.hasOwnProperty.call(given, key) || given[key] === undefined) {
+        given[key] = def[key];
+      } else if (given[key] === Object(given[key])) {
+        given[key] = Util.mergeDefault(def[key], given[key]);
+      }
+    }
+
+    return given;
   }
 
   // Polyfill for Array.prototype.at

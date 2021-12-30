@@ -1,0 +1,52 @@
+fields:
+  default:
+    - name: id
+      value: >
+        const np = require('node:path');
+        return np.basename(np.join(path, '..')).toLowerCase();
+      handles:
+        - verifyType: [ string, undefined ]
+    - name: name
+      value: manifest.name ?? data.fields.id.value
+      handles:
+        - verifyType: [ string, undefined ]
+    - name: contact
+      value: manifest.contact
+      handles:
+        - verifyType: [ string, undefined ]
+    - name: author
+      value: manifest.author ?? config.defaultauthor
+      handles:
+        - verifyType: [ string, undefined ]
+        - parseEmail
+    - name: version
+      value: manifest.version
+      handles:
+        - verifyType: [ string, number, undefined ]
+    - name: description
+      value: manifest.description ?? manifest.about
+      handles:
+        - verifyType: [ string, undefined ]
+    - name: usage
+      value: manifest.usage
+      handles:
+        - verifyType: [ string, undefined ]
+    - name: download
+      value: manifest.download
+      handles:
+        - verifyType: [ string, undefined ]
+        - verifyUrl
+    - name: gta5mods
+      value: manifest['gta5-mods'] ?? manifest.gta5mods
+      handles:
+        - verifyType: [ string, undefined ]
+        - verifyUrl: gta5-mods.com
+    - name: private
+      value: manifest.private
+      handles:
+        - verifyType: [ string, boolean, undefined ]
+  custom:
+    - name: testfield
+      value: manifest.testfield
+      handles:
+        - verifyType: [ string, undefined ]

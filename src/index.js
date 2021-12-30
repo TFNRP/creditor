@@ -6,9 +6,10 @@ const fs = require('node:fs');
 const np = require('node:path');
 const mri = require('mri');
 const Data = require('./structures/Data');
+const Config = require('./util/Config');
 const Util = require('./util/Util');
 
-const config = Util.getConfig();
+const config = new Config(Util.getConfig());
 
 const parsed = mri(process.argv.slice(2));
 const args = {
@@ -47,32 +48,23 @@ const recurse = async path => {
     return;
   }
 
-  const result = Util.parseManifest(path, src);
-  if (!result) return;
+  const manifest = Util.parseManifest(path, src);
+  if (!manifest) return;
 
   const data = new Data(path);
-  data.createField('id', np.basename(np.join(path, '..')).toLowerCase()).verifyType('string', 'undefined');
-  data.createField('name', result.name ?? data.fields.id.value).verifyType('string', 'undefined');
-  data.createField('contact', result.contact).verifyType('string', 'undefined');
-  data
-    .createField('author', result.author ?? config.defaultAuthor)
-    .verifyType('string')
-    .parseEmail();
-  data.createField('version', result.version).verifyType('string', 'number', 'undefined');
-  data.createField('description', result.description ?? result.about).verifyType('string', 'undefined');
-  data.createField('usage', result.usage).verifyType('string', 'undefined');
-  data.createField('download', result.download).verifyType('string', 'undefined').verifyUrl();
-  data
-    .createField('gta5mods', result['gta5-mods'] ?? result.gta5mods)
-    .verifyType('string', 'undefined')
-    .verifyUrl('gta5-mods.com');
-  data.createField('private', result.private).verifyType('string', 'undefined');
-  if (!data.fields.private.value) {
-    await data
-      .createField('repository', result.repository)
-      .verifyType('string', 'undefined')
-      .verifyUrl('github.com', 'gitlab.com')
-      .fetchRepositoryData();
+  for (const type of ['default', 'custom']) {
+    for (const fieldData of config.fields[type]) {
+      const value =
+        typeof fieldData.value === 'string' ? eval(fieldData.value) : fieldData.value({ manifest, config, data, path });
+      const field = data.createField(fieldData.name, value);
+      for (const handle of fieldData.handles) {
+        for (const key in handle) {
+          if (!field[key]) throw new TypeError(`Invalid handle "${key}".`);
+          if (typeof field[key] !== 'function') throw new TypeError(`Handles must point to a function, got "${key}".`);
+          await field[key](...handle[key]);
+        }
+      }
+    }
   }
 
   json.push(data.toJSON());
