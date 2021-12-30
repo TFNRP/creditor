@@ -5,7 +5,6 @@
 const fs = require('node:fs');
 const np = require('node:path');
 const mri = require('mri');
-const yaml = require('yaml');
 const Data = require('./structures/Data');
 const Util = require('./util/Util');
 
@@ -48,7 +47,9 @@ const recurse = async path => {
     return;
   }
 
-  const result = np.extname(path) === '.lua' ? Util.parseManifest(src) : yaml.parse(src);
+  const result = Util.parseManifest(path, src);
+  if (!result) return;
+
   const data = new Data(path);
   data.createField('id', np.basename(np.join(path, '..')).toLowerCase()).verifyType('string', 'undefined');
   data.createField('name', result.name ?? data.fields.id.value).verifyType('string', 'undefined');

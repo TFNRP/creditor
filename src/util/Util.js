@@ -7,11 +7,22 @@ const yaml = require('yaml');
 const Constants = require('./Constants');
 
 class Util extends null {
-  static parseManifest(src) {
-    const parsed = lua.parse(src, {
-      comments: false,
-      luaVersion: '5.1',
-    });
+  static parseManifest(file, src) {
+    if (path.extname(file) === '.lua') return Util.parseLua(file, src);
+    return Util.parseYaml(file, src);
+  }
+
+  static parseLua(file, src) {
+    let parsed;
+    try {
+      parsed = lua.parse(src, {
+        comments: false,
+        luaVersion: '5.1',
+      });
+    } catch (e) {
+      console.error(`${e.name}: ${e.message} whilst parsing ${path.relative(process.cwd(), file)}`);
+      return null;
+    }
     const object = {};
     for (const item of parsed.body) {
       switch (item.type) {
@@ -92,6 +103,21 @@ class Util extends null {
     }
 
     return object;
+  }
+
+  static parseYaml(file, src) {
+    let data;
+    try {
+      data = yaml.parse(src);
+    } catch (e) {
+      console.error(
+        `YamlError: ${e.message}${
+          e.source?.resolved?.value ? ` near "${e.source.resolved.value}"` : ''
+        } whilst parsing ${path.relative(process.cwd(), file)}`,
+      );
+      return null;
+    }
+    return data;
   }
 
   static getConfig() {
