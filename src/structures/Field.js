@@ -68,11 +68,11 @@ class Field {
 
   parseEmail() {
     if (typeof this.value === 'string' && !this.data.fields.contact.value) {
-      const matched = this.value.match(/<\w+@\w+\.\w+>/i);
+      const matched = this.value.match(/<(\w+@\w+\.\w+)>/i) ?? this.value.match(/(\w+@\w+\.\w+)/i);
       if (matched) {
         if (matched.index === 0) this.value = this.value.slice(matched[0].length).trim();
         else this.value = this.value.slice(0, matched.index).trim();
-        this.data.fields.contact.value = matched[0].slice(1, -1);
+        this.data.fields.contact.value = matched[1];
       }
     }
     return this;
