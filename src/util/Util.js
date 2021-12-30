@@ -121,9 +121,13 @@ class Util extends null {
   }
 
   static getConfig() {
-    for (const file of ['.creditor.yaml', '.creditor.yml']) {
-      const p = path.join(process.cwd(), file);
-      if (fs.existsSync(p)) return yaml.parse(p);
+    var filepath;
+    if (['.creditor.yaml', '.creditor.yml'].some(p => fs.existsSync((filepath = path.join(process.cwd(), p))))) {
+      const data = Util.parseYaml(filepath);
+      if (data) return data;
+    }
+    if (['.creditor.json', '.creditor.js'].some(p => fs.existsSync((filepath = path.join(process.cwd(), p))))) {
+      return require(filepath);
     }
     return Constants.DefaultConfig;
   }
