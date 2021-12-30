@@ -11,11 +11,12 @@
     "creditor": "./src/index.js"
   },
   "scripts": {
-    "test": "npm run lint && npm i -g && bash ./test/test.sh",
+    "test": "npm run lint && npm i -g && bash ./test/test.sh && npm run server",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "prettier": "prettier --write src/**/*.js",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run test",
+    "server": "http-dev-server -f test/server.js"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-prettier": "^4.0.0",
+    "http-dev-server": "^0.2.3",
     "prettier": "^2.4.1"
   },
   "engines": {
