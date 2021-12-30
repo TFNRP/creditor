@@ -17,6 +17,7 @@
     <div class="panel panel-default" v-for="credit in credits" :id="credit.id">
       <div class="panel-heading">
         <h2 :title="credit.name">
+          <small v-if="credit.private" title="This resource is closed-source.">private</small>
           <a target="_blank" v-if="credit.repository?.url || credit.gta5mods || credit.download"
             :href="credit.repository?.url || credit.gta5mods || credit.download">{{ credit.name }}</a>
           <span v-else>{{ credit.name }}</span>

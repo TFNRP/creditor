@@ -66,11 +66,14 @@ const recurse = async path => {
     .createField('gta5mods', result['gta5-mods'] ?? result.gta5mods)
     .verifyType('string', 'undefined')
     .verifyUrl('gta5-mods.com');
-  await data
-    .createField('repository', result.repository)
-    .verifyType('string', 'undefined')
-    .verifyUrl('github.com', 'gitlab.com')
-    .fetchRepositoryData();
+  data.createField('private', result.private).verifyType('string', 'undefined');
+  if (!data.fields.private.value) {
+    await data
+      .createField('repository', result.repository)
+      .verifyType('string', 'undefined')
+      .verifyUrl('github.com', 'gitlab.com')
+      .fetchRepositoryData();
+  }
 
   json.push(data.toJSON());
 };
